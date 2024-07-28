@@ -7,6 +7,7 @@ import {
 } from '@nestjs/platform-fastify';
 import { fastifyInstance } from './http.server';
 import 'dotenv/config';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const port = process.env.APP_PORT ?? 3000;
@@ -25,6 +26,15 @@ async function bootstrap() {
     credentials: true,
     maxAge: 86400,
   });
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      transformOptions: {
+        enableImplicitConversion: true,
+      },
+      whitelist: true,
+    }),
+  );
 
   await app.listen(port);
 }
