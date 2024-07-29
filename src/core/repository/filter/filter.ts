@@ -1,6 +1,6 @@
 import { FilterCondition } from './filter.condition';
 import { FilterOptions } from 'src/core/repository/filter/filter.options';
-import { ILike, In, IsNull, Not } from 'typeorm';
+import { ILike, In, IsNull, Not, Or } from 'typeorm';
 
 export class Filter {
   constructor(public readonly options?: FilterOptions) {}
@@ -35,9 +35,9 @@ export class Filter {
       return {};
     }
     if (Array.isArray(value)) {
-      return { [field]: Not(value) };
+      return { [field]: Not(In([...value])) };
     }
-    return { [field]: Not(In([...value])) };
+    return { [field]: Not(value) };
   }
 
   andWhereLike(field: string, value: any): object {
@@ -45,7 +45,9 @@ export class Filter {
       return {};
     }
     if (Array.isArray(value)) {
-      return value.map((v) => ({ [field]: ILike(`%${v}%`) }));
+      return {
+        [field]: Or(...value.map((v) => ILike(`%${v}%`))),
+      };
     }
     return { [field]: ILike(`%${value}%`) };
   }
