@@ -18,11 +18,11 @@ export class UsersService {
     private readonly rolesService: RolesService,
   ) {}
 
-  async list(filter: UsersFilter): Promise<User[] | Paginator<User>> {
+  async list(filter?: UsersFilter): Promise<User[] | Paginator<User>> {
     return await this.usersRepository.list(filter);
   }
 
-  async one(filter: UsersFilter): Promise<User | null> {
+  async one(filter?: UsersFilter): Promise<User | null> {
     return await this.usersRepository.one(filter);
   }
 
