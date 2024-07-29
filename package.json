@@ -17,7 +17,12 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "typeorm": "typeorm-ts-node-esm",
+    "migration:create": "tsx ./node_modules/typeorm/cli.js migration:create ./migrations/$NAME",
+    "migration:revert": "tsx ./node_modules/typeorm/cli.js -d ./data-source.ts migration:revert",
+    "migration:run": "tsx ./node_modules/typeorm/cli.js -d ./data-source.ts migration:run",
+    "migration:generate": "tsx ./node_modules/typeorm/cli.js -d ./data-source.ts --pretty=true  migration:generate ./migrations/$NAME"
   },
   "dependencies": {
     "@apollo/server": "^4.10.5",
@@ -30,6 +35,7 @@
     "@nestjs/graphql": "^12.2.0",
     "@nestjs/jwt": "^10.2.0",
     "@nestjs/platform-fastify": "^10.3.10",
+    "@nestjs/typeorm": "^10.0.2",
     "argon2": "^0.40.3",
     "axios": "^1.7.2",
     "class-transformer": "^0.5.1",
@@ -38,9 +44,12 @@
     "graphql": "^16.9.0",
     "graphql-type-json": "^0.3.2",
     "luxon": "^3.4.4",
+    "pg": "^8.12.0",
     "qs": "^6.12.3",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
+    "tsx": "^4.16.2",
+    "typeorm": "^0.3.20",
     "uuid": "^10.0.0"
   },
   "devDependencies": {

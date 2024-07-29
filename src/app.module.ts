@@ -8,7 +8,9 @@ import path from 'path';
 import * as process from 'node:process';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
-import GraphQLJSON, { GraphQLJSONObject } from 'graphql-type-json';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { RolesModule } from 'src/roles/roles.module';
+import { DateScalar } from 'src/core/utils/scalars/date.scalar';
 
 @Module({
   imports: [
@@ -35,9 +37,22 @@ import GraphQLJSON, { GraphQLJSONObject } from 'graphql-type-json';
         numberScalarMode: 'integer',
       },
     }),
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      host: process.env.POSTGRES_HOST,
+      port: parseInt(process.env.POSTGRES_PORT),
+      username: process.env.POSTGRES_USER,
+      password: process.env.POSTGRES_PASSWORD,
+      database: process.env.POSTGRES_DATABASE,
+      migrationsTableName: 'migrations',
+      autoLoadEntities: true,
+      logging: process.env.NODE_ENV !== 'production',
+      entities: ['dist/**/*.entity{.ts,.js}'],
+    }),
     UsersModule,
+    RolesModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, DateScalar],
 })
 export class AppModule {}

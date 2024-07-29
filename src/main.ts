@@ -32,7 +32,7 @@ async function bootstrap() {
       transformOptions: {
         enableImplicitConversion: true,
       },
-      whitelist: true,
+      //whitelist: true, // enable mutation Args empty
     }),
   );
 
