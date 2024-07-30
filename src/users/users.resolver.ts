@@ -20,7 +20,7 @@ export class UsersResolver {
   @Query(() => [User])
   async userList(@Args('req') req: UserListInput): Promise<User[]> {
     const users = (await this.usersService.list(
-      req.toFiler(),
+      req.toFilter(),
     )) as Paginator<User>;
 
     return users.data;

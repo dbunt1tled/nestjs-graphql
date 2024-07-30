@@ -31,7 +31,7 @@ export class UserListInput {
   @Field(() => GraphQLJSONObject, { nullable: true })
   orderBy?: SortOrder;
 
-  toFiler() {
+  toFilter() {
     return new UsersFilter({
       filter: {
         nameFilter: this.name,
