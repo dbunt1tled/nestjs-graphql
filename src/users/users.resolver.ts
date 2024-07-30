@@ -8,18 +8,22 @@ import {
 } from '@nestjs/graphql';
 import { UsersService } from 'src/users/users.service';
 import { User } from 'src/users/entities/user.entity';
-import { UsersFilter } from 'src/users/repository/users.filter';
 import { Paginator } from 'src/core/repository/paginator';
 import { UserCreateInput } from 'src/users/dto/user-create.input';
 import { Role } from 'src/roles/entities/role.entity';
+import { UserListInput } from 'src/users/dto/user-list.input';
 
 @Resolver(() => User)
 export class UsersResolver {
   constructor(private readonly usersService: UsersService) {}
 
   @Query(() => [User])
-  userList(): Promise<User[] | Paginator<User>> {
-    return this.usersService.list(new UsersFilter());
+  async userList(@Args('req') req: UserListInput): Promise<User[]> {
+    const users = (await this.usersService.list(
+      req.toFiler(),
+    )) as Paginator<User>;
+
+    return users.data;
   }
 
   @Query(() => User)

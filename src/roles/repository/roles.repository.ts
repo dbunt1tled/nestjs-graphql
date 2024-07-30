@@ -8,6 +8,7 @@ import { Role } from 'src/roles/entities/role.entity';
 import { RoleCreateInput } from 'src/roles/dto/role-create.input';
 import { RolesFilter } from 'src/roles/repository/roles.filter';
 import { DeleteResult } from 'typeorm/query-builder/result/DeleteResult';
+import { Roles } from 'src/roles/enum/roles';
 
 @Injectable()
 export class RolesRepository extends RepositoryBase<Role> {
@@ -56,13 +57,14 @@ export class RolesRepository extends RepositoryBase<Role> {
     return await this.resultList(filter);
   }
 
-  async remove(userId: string, role?: string): Promise<DeleteResult> {
-    return await this.repository.delete({ user_id: userId });
-
-    // const builder = this.repository
-    //   .createQueryBuilder('roles')
-    //   .restore()
-    //   .where('roles.user_id - :email', { email: `%${query}%` })
-    //   .execute();
+  async remove(userId: string, role?: Roles): Promise<DeleteResult> {
+    const builder = this.repository
+      .createQueryBuilder()
+      .restore()
+      .where('user_id = :user_id', { user_id: userId });
+    if (role) {
+      builder.andWhere('role = :role', { role });
+    }
+    return await builder.execute();
   }
 }

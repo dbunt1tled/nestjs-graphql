@@ -5,6 +5,7 @@ import { Role } from 'src/roles/entities/role.entity';
 import { RoleCreateInput } from 'src/roles/dto/role-create.input';
 import { DeleteResult } from 'typeorm/query-builder/result/DeleteResult';
 import { RolesRepository } from 'src/roles/repository/roles.repository';
+import { Roles } from 'src/roles/enum/roles';
 
 @Injectable()
 export class RolesService {
@@ -33,7 +34,7 @@ export class RolesService {
     return await this.roleRepository.findById(id);
   }
 
-  async remove(userId: string, role?: string): Promise<DeleteResult> {
+  async remove(userId: string, role?: Roles): Promise<DeleteResult> {
     return await this.roleRepository.remove(userId, role);
   }
 }

@@ -11,6 +11,9 @@ import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RolesModule } from 'src/roles/roles.module';
 import { DateScalar } from 'src/core/utils/scalars/date.scalar';
+import { HashModule } from 'src/core/hash/hash.module';
+import { ExceptionHandler } from 'src/handler';
+import { APP_FILTER } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -51,8 +54,16 @@ import { DateScalar } from 'src/core/utils/scalars/date.scalar';
     }),
     UsersModule,
     RolesModule,
+    HashModule,
   ],
   controllers: [AppController],
-  providers: [AppService, DateScalar],
+  providers: [
+    AppService,
+    DateScalar,
+    // {
+    //   provide: APP_FILTER,
+    //   useClass: ExceptionHandler,
+    // },
+  ],
 })
 export class AppModule {}

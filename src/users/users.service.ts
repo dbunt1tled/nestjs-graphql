@@ -10,12 +10,14 @@ import { Role } from 'src/roles/entities/role.entity';
 import { RolesFilter } from 'src/roles/repository/roles.filter';
 import { isArray } from 'class-validator';
 import { Roles } from 'src/roles/enum/roles';
+import { HashService } from 'src/core/hash/hash.service';
 
 @Injectable()
 export class UsersService {
   constructor(
-    private readonly usersRepository: UsersRepository,
     private readonly rolesService: RolesService,
+    private readonly usersRepository: UsersRepository,
+    private readonly hashService: HashService,
   ) {}
 
   async list(filter?: UsersFilter): Promise<User[] | Paginator<User>> {
@@ -31,7 +33,10 @@ export class UsersService {
   }
 
   async new(user: UserCreateInput): Promise<User> {
-    const u = await this.usersRepository.new(user);
+    const u = await this.usersRepository.new({
+      ...user,
+      password: await this.hashService.hash(user.password),
+    });
     if (isArray(user.roles)) {
       await Promise.all(
         user.roles.map(async (role: Roles) => {
@@ -50,7 +55,28 @@ export class UsersService {
   }
 
   async change(user: UserUpdateInput): Promise<User> {
-    return await this.usersRepository.change(user);
+    const u = await this.usersRepository.change({
+      ...user,
+      password:
+        user.password !== undefined
+          ? await this.hashService.hash(user.password)
+          : undefined,
+    });
+    if (isArray(user.roles)) {
+      await this.rolesService.remove(u.id);
+      await Promise.all(
+        user.roles.map(async (role: Roles) => {
+          await this.rolesService.new(
+            {
+              userId: u.id,
+              role: role,
+            },
+            false,
+          );
+        }),
+      );
+    }
+    return u;
   }
 
   async findById(id: string): Promise<User> {

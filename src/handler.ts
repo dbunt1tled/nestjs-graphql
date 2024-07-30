@@ -4,18 +4,23 @@ import {
   HttpStatus,
   HttpException,
   ExceptionFilter,
+  ContextType,
 } from '@nestjs/common';
 import { HttpArgumentsHost } from '@nestjs/common/interfaces';
 import { Log } from 'src/core/logger/log';
 import { FastifyRequest } from 'fastify';
 import { HttpAdapterHost } from '@nestjs/core';
 import { BaseException } from 'src/core/exception/base-exception';
+import { GqlExceptionFilter } from '@nestjs/graphql';
 
 @Catch()
-export class ExceptionHandler implements ExceptionFilter {
+export class ExceptionHandler implements ExceptionFilter, GqlExceptionFilter {
   constructor(private readonly httpAdapterHost: HttpAdapterHost) {}
 
   async catch(exception: unknown, host: ArgumentsHost) {
+    if (host.getType() as ContextType | 'graphql') {
+      console.log('1');
+    }
     const ctx: HttpArgumentsHost = host.switchToHttp();
     const req = <FastifyRequest>ctx.getRequest();
     const logger: Log = new Log('general');
