@@ -1,7 +1,6 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Paginator } from 'src/core/repository/paginator';
 import { User } from 'src/users/entities/user.entity';
-import { GraphQLJSONObject } from 'graphql-type-json';
 
 @ObjectType()
 class PageMeta {
