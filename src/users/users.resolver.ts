@@ -12,18 +12,15 @@ import { Paginator } from 'src/core/repository/paginator';
 import { UserCreateInput } from 'src/users/dto/user-create.input';
 import { Role } from 'src/roles/entities/role.entity';
 import { UserListInput } from 'src/users/dto/user-list.input';
+import { UserListObject } from 'src/users/dto/user-list.object';
 
 @Resolver(() => User)
 export class UsersResolver {
   constructor(private readonly usersService: UsersService) {}
 
-  @Query(() => [User])
-  async userList(@Args('req') req: UserListInput): Promise<User[]> {
-    const users = (await this.usersService.list(
-      req.toFilter(),
-    )) as Paginator<User>;
-
-    return users.data;
+  @Query(() => UserListObject)
+  async userList(@Args('req') req: UserListInput) {
+    return (await this.usersService.list(req.toFilter())) as Paginator<User>;
   }
 
   @Query(() => User)
