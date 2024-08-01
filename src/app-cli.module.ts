@@ -2,15 +2,11 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
-import { GraphQLModule } from '@nestjs/graphql';
-import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
-import path from 'path';
 import * as process from 'node:process';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RolesModule } from 'src/roles/roles.module';
-import { DateScalar } from 'src/core/utils/scalars/date.scalar';
 import { TestCommand } from 'src/commands/test.command';
 import { HashModule } from './core/hash/hash.module';
 

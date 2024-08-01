@@ -14,6 +14,7 @@ import { DateScalar } from 'src/core/utils/scalars/date.scalar';
 import { HashModule } from 'src/core/hash/hash.module';
 import { ExceptionHandler } from 'src/handler';
 import { APP_FILTER } from '@nestjs/core';
+import { AuthModule } from 'src/modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -55,6 +56,7 @@ import { APP_FILTER } from '@nestjs/core';
     UsersModule,
     RolesModule,
     HashModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [
