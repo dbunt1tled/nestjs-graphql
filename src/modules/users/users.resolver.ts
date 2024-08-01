@@ -6,13 +6,13 @@ import {
   Parent,
   ResolveField,
 } from '@nestjs/graphql';
-import { UsersService } from 'src/users/users.service';
-import { User } from 'src/users/entities/user.entity';
+import { UsersService } from 'src/modules/users/users.service';
+import { User } from 'src/modules/users/entities/user.entity';
 import { Paginator } from 'src/core/repository/paginator';
-import { UserCreateInput } from 'src/users/dto/user-create.input';
-import { Role } from 'src/roles/entities/role.entity';
-import { UserListInput } from 'src/users/dto/user-list.input';
-import { UserListObject } from 'src/users/dto/user-list.object';
+import { UserCreateInput } from 'src/modules/users/dto/user-create.input';
+import { Role } from 'src/modules/roles/entities/role.entity';
+import { UserListInput } from 'src/modules/users/dto/user-list.input';
+import { UserListObject } from 'src/modules/users/dto/user-list.object';
 
 @Resolver(() => User)
 export class UsersResolver {

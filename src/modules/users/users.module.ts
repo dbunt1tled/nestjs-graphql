@@ -2,9 +2,9 @@ import { Module } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UsersResolver } from './users.resolver';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from 'src/users/entities/user.entity';
-import { UsersRepository } from 'src/users/repository/users.repository';
-import { RolesModule } from 'src/roles/roles.module';
+import { User } from 'src/modules/users/entities/user.entity';
+import { UsersRepository } from 'src/modules/users/repository/users.repository';
+import { RolesModule } from 'src/modules/roles/roles.module';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User]), RolesModule],

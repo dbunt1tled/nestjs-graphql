@@ -2,20 +2,21 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../entities/user.entity';
-import { UserCreateInput } from 'src/users/dto/user-create.input';
-import * as argon2 from 'argon2';
+import { UserCreateInput } from 'src/modules/users/dto/user-create.input';
 import { uuid7 } from 'src/core/utils';
-import { UserUpdateInput } from 'src/users/dto/user-update.input';
+import { UserUpdateInput } from 'src/modules/users/dto/user-update.input';
 import { NotFound } from 'src/core/exception/not-found';
-import { UsersFilter } from 'src/users/repository/users.filter';
+import { UsersFilter } from 'src/modules/users/repository/users.filter';
 import { Paginator } from 'src/core/repository/paginator';
 import { RepositoryBase } from 'src/core/repository/repository.base';
+import { HashService } from 'src/core/hash/hash.service';
 
 @Injectable()
 export class UsersRepository extends RepositoryBase<User> {
   constructor(
     @InjectRepository(User)
     repository: Repository<User>,
+    private readonly hashService: HashService,
   ) {
     super(repository);
   }
@@ -38,8 +39,9 @@ export class UsersRepository extends RepositoryBase<User> {
         id: uuid7(),
         name: user.name,
         email: user.email,
-        hash: await argon2.hash(user.password),
+        hash: await this.hashService.hash(user.password),
         status: user.status,
+        confirmedAt: user.confirmedAt,
         createdAt: new Date(),
         updatedAt: new Date(),
       }),
@@ -53,8 +55,9 @@ export class UsersRepository extends RepositoryBase<User> {
       ...u,
       email: user.email ?? u.email,
       name: user.name ?? u.name,
-      hash: user.password ? await argon2.hash(user.password) : u.hash,
+      hash: user.password ? await this.hashService.hash(user.password) : u.hash,
       status: user.status ?? u.status,
+      confirmedAt: user.confirmedAt ?? u.confirmedAt,
     });
   }
 

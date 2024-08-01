@@ -1,12 +1,12 @@
 import { InputType, Field } from '@nestjs/graphql';
 import { UuidScalar } from 'src/core/utils/scalars/uuid.scalar';
-import { Roles } from 'src/roles/enum/roles';
+import { Roles } from 'src/modules/roles/enum/roles';
 
 @InputType()
-export class RoleCreateInput {
+export class RoleRemoveInput {
   @Field(() => UuidScalar)
   userId: string;
 
-  @Field()
-  role: Roles;
+  @Field({ nullable: true })
+  role?: Roles;
 }

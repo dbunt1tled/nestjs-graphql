@@ -1,10 +1,10 @@
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
-import { Role } from 'src/roles/entities/role.entity';
-import { RoleCreateInput } from 'src/roles/dto/role-create.input';
-import { RoleListInput } from 'src/roles/dto/role-list.input';
-import { RolesFilter } from 'src/roles/repository/roles.filter';
-import { RoleRemoveInput } from 'src/roles/dto/role-remove.input';
-import { RolesService } from 'src/roles/roles.service';
+import { Role } from 'src/modules/roles/entities/role.entity';
+import { RoleCreateInput } from 'src/modules/roles/dto/role-create.input';
+import { RoleListInput } from 'src/modules/roles/dto/role-list.input';
+import { RolesFilter } from 'src/modules/roles/repository/roles.filter';
+import { RoleRemoveInput } from 'src/modules/roles/dto/role-remove.input';
+import { RolesService } from 'src/modules/roles/roles.service';
 
 @Resolver(() => Role)
 export class RolesResolver {

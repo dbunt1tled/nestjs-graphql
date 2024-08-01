@@ -1,8 +1,8 @@
-import { UserStatus } from 'src/users/enum/user.status';
+import { UserStatus } from 'src/modules/users/enum/user.status';
 import { Field, InputType, Int } from '@nestjs/graphql';
 import { Min } from 'class-validator';
-import { Roles } from 'src/roles/enum/roles';
-import { UsersFilter } from 'src/users/repository/users.filter';
+import { Roles } from 'src/modules/roles/enum/roles';
+import { UsersFilter } from 'src/modules/users/repository/users.filter';
 import { SortOrder } from 'src/core/repository/sort.order';
 import { GraphQLJSONObject } from 'graphql-type-json';
 

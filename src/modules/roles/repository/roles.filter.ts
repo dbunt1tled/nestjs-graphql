@@ -18,7 +18,7 @@ export class RolesFilter extends Filter {
   }
   build(limit?: number): FilterCondition {
     return super.build(limit, {
-      ...this.andWhere('user_id', this.options.filter.userId),
+      ...this.andWhere('userId', this.options.filter.userId),
       ...this.andWhere('role', this.options.filter.role),
     });
   }

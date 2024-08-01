@@ -2,8 +2,8 @@ import { Filter } from 'src/core/repository/filter/filter';
 import { FilterCondition } from 'src/core/repository/filter/filter.condition';
 import { Pagination } from 'src/core/repository/pagination';
 import { SortOrder } from 'src/core/repository/sort.order';
-import { UserStatus } from 'src/users/enum/user.status';
-import { Roles } from 'src/roles/enum/roles';
+import { UserStatus } from 'src/modules/users/enum/user.status';
+import { Roles } from 'src/modules/roles/enum/roles';
 
 export class UsersFilter extends Filter {
   constructor(

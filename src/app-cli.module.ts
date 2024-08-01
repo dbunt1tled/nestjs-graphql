@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UsersModule } from './users/users.module';
+import { UsersModule } from 'src/modules/users/users.module';
 import * as process from 'node:process';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { RolesModule } from 'src/roles/roles.module';
+import { RolesModule } from 'src/modules/roles/roles.module';
 import { TestCommand } from 'src/commands/test.command';
 import { HashModule } from './core/hash/hash.module';
 

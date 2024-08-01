@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
-import { User } from 'src/users/entities/user.entity';
+import { User } from 'src/modules/users/entities/user.entity';
 import { Paginator } from 'src/core/repository/paginator';
-import { UsersFilter } from 'src/users/repository/users.filter';
-import { UsersRepository } from 'src/users/repository/users.repository';
-import { UserUpdateInput } from 'src/users/dto/user-update.input';
-import { UserCreateInput } from 'src/users/dto/user-create.input';
-import { RolesService } from 'src/roles/roles.service';
-import { Role } from 'src/roles/entities/role.entity';
-import { RolesFilter } from 'src/roles/repository/roles.filter';
+import { UsersFilter } from 'src/modules/users/repository/users.filter';
+import { UsersRepository } from 'src/modules/users/repository/users.repository';
+import { UserUpdateInput } from 'src/modules/users/dto/user-update.input';
+import { UserCreateInput } from 'src/modules/users/dto/user-create.input';
+import { RolesService } from 'src/modules/roles/roles.service';
+import { Role } from 'src/modules/roles/entities/role.entity';
+import { RolesFilter } from 'src/modules/roles/repository/roles.filter';
 import { isArray } from 'class-validator';
-import { Roles } from 'src/roles/enum/roles';
+import { Roles } from 'src/modules/roles/enum/roles';
 import { HashService } from 'src/core/hash/hash.service';
 import { NotFound } from 'src/core/exception/not-found';
 

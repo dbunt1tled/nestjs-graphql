@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { Paginator } from 'src/core/repository/paginator';
-import { RolesFilter } from 'src/roles/repository/roles.filter';
-import { Role } from 'src/roles/entities/role.entity';
-import { RoleCreateInput } from 'src/roles/dto/role-create.input';
+import { RolesFilter } from 'src/modules/roles/repository/roles.filter';
+import { Role } from 'src/modules/roles/entities/role.entity';
+import { RoleCreateInput } from 'src/modules/roles/dto/role-create.input';
 import { DeleteResult } from 'typeorm/query-builder/result/DeleteResult';
-import { RolesRepository } from 'src/roles/repository/roles.repository';
-import { Roles } from 'src/roles/enum/roles';
+import { RolesRepository } from 'src/modules/roles/repository/roles.repository';
+import { Roles } from 'src/modules/roles/enum/roles';
 
 @Injectable()
 export class RolesService {

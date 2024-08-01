@@ -4,11 +4,11 @@ import { Repository } from 'typeorm';
 import { NotFound } from 'src/core/exception/not-found';
 import { Paginator } from 'src/core/repository/paginator';
 import { RepositoryBase } from 'src/core/repository/repository.base';
-import { Role } from 'src/roles/entities/role.entity';
-import { RoleCreateInput } from 'src/roles/dto/role-create.input';
-import { RolesFilter } from 'src/roles/repository/roles.filter';
+import { Role } from 'src/modules/roles/entities/role.entity';
+import { RoleCreateInput } from 'src/modules/roles/dto/role-create.input';
+import { RolesFilter } from 'src/modules/roles/repository/roles.filter';
 import { DeleteResult } from 'typeorm/query-builder/result/DeleteResult';
-import { Roles } from 'src/roles/enum/roles';
+import { Roles } from 'src/modules/roles/enum/roles';
 
 @Injectable()
 export class RolesRepository extends RepositoryBase<Role> {
@@ -20,7 +20,7 @@ export class RolesRepository extends RepositoryBase<Role> {
   }
 
   async findById(userId: string): Promise<Role> {
-    return this.repository.findOne({ where: { user_id: userId } });
+    return this.repository.findOne({ where: { userId: userId } });
   }
 
   async getById(userId: string): Promise<Role> {
@@ -37,7 +37,7 @@ export class RolesRepository extends RepositoryBase<Role> {
   ): Promise<Promise<Role> | Promise<null>> {
     await this.repository.insert(
       this.repository.create({
-        user_id: role.userId,
+        userId: role.userId,
         role: role.role,
         createdAt: new Date(),
       }),
@@ -61,7 +61,7 @@ export class RolesRepository extends RepositoryBase<Role> {
     const builder = this.repository
       .createQueryBuilder()
       .restore()
-      .where('user_id = :user_id', { user_id: userId });
+      .where('userId = :userId', { userId: userId });
     if (role) {
       builder.andWhere('role = :role', { role });
     }

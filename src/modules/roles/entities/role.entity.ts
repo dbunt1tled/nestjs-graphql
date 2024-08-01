@@ -1,15 +1,15 @@
 import { ObjectType, Field } from '@nestjs/graphql';
 import { CreateDateColumn, Entity, PrimaryColumn, Unique } from 'typeorm';
 import { UuidScalar } from 'src/core/utils/scalars/uuid.scalar';
-import { Roles } from 'src/roles/enum/roles';
+import { Roles } from 'src/modules/roles/enum/roles';
 
 @Entity('roles')
 @ObjectType()
-@Unique('idx_roles_role_user', ['role', 'user_id'])
+@Unique('idx_roles_role_user', ['role', 'userId'])
 export class Role {
   @PrimaryColumn({ type: 'uuid' })
   @Field(() => UuidScalar)
-  user_id: string;
+  userId: string;
 
   @PrimaryColumn({ type: 'varchar', length: 70 })
   @Field()
