@@ -13,7 +13,10 @@ import { UserCreateInput } from 'src/modules/users/dto/user-create.input';
 import { Role } from 'src/modules/roles/entities/role.entity';
 import { UserListInput } from 'src/modules/users/dto/user-list.input';
 import { UserListObject } from 'src/modules/users/dto/user-list.object';
+import { UseGuards } from '@nestjs/common';
+import { AuthBearerGuard } from 'src/modules/auth/guards/auth-bearer.guard';
 
+@UseGuards(AuthBearerGuard)
 @Resolver(() => User)
 export class UsersResolver {
   constructor(private readonly usersService: UsersService) {}

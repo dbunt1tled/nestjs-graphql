@@ -9,6 +9,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { RolesModule } from 'src/modules/roles/roles.module';
 import { TestCommand } from 'src/commands/test.command';
 import { HashModule } from './core/hash/hash.module';
+import { AuthModule } from 'src/modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { HashModule } from './core/hash/hash.module';
     UsersModule,
     RolesModule,
     HashModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService, TestCommand],

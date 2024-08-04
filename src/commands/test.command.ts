@@ -17,6 +17,9 @@ export class TestCommand extends CommandRunner {
   }
 
   async run(inputs: string[], options: Record<string, any>): Promise<void> {
+    const hash = await this.hashService.hash('Test');
+    console.log(hash);
+    console.log(await this.hashService.compare('Test', hash));
     // const u = await this.userService.one();
     // console.log(u);
     // const tokens = await this.hashService.tokens(u, {

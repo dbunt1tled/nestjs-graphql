@@ -4,11 +4,8 @@ import { AuthService } from 'src/modules/auth/auth.service';
 import { SignInResponse } from 'src/modules/auth/dto/sign-in.response';
 import { SignUpInput } from 'src/modules/auth/dto/sign-up.input';
 import { SignUpResponse } from 'src/modules/auth/dto/sign-up.response';
-import { UseGuards } from '@nestjs/common';
-import { AuthBearerGuard } from 'src/modules/auth/guards/auth-bearer.guard';
 
 @Resolver()
-@UseGuards(AuthBearerGuard)
 export class AuthResolver {
   constructor(private readonly authService: AuthService) {}
 

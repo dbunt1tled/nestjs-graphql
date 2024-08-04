@@ -5,7 +5,10 @@ import { RoleListInput } from 'src/modules/roles/dto/role-list.input';
 import { RolesFilter } from 'src/modules/roles/repository/roles.filter';
 import { RoleRemoveInput } from 'src/modules/roles/dto/role-remove.input';
 import { RolesService } from 'src/modules/roles/roles.service';
+import { UseGuards } from '@nestjs/common';
+import { AuthBearerGuard } from 'src/modules/auth/guards/auth-bearer.guard';
 
+@UseGuards(AuthBearerGuard)
 @Resolver(() => Role)
 export class RolesResolver {
   constructor(private readonly roleService: RolesService) {}
