@@ -4,7 +4,7 @@ import axios from 'axios';
 import { Log } from 'src/core/logger/log';
 
 @Injectable()
-export class HttpService {
+export class HttpClientService {
   private readonly instance: AxiosInstance;
 
   private logger = new Log('general');

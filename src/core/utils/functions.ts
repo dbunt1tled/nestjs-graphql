@@ -31,10 +31,13 @@ export const hash = (guid: string, algorithm: string = 'sha256'): string => {
 export const uuid7 = () => uuidv7();
 export const uuid4 = () => uuidv4();
 
-export const safeJSONParse = (p: any) => {
+export const JSONParseSafe = (p: any, returnOriginalIfError = false) => {
   try {
     return JSON.parse(p);
   } catch {
+    if (returnOriginalIfError) {
+      return p;
+    }
     return null;
   }
 };

@@ -5,6 +5,8 @@ import { User } from 'src/modules/users/entities/user.entity';
 import { TokenType } from 'src/core/hash/enums/token.type';
 import { ConfigService } from '@nestjs/config';
 import { Tokens } from 'src/core/hash/dto/tokens';
+import { DateTime } from 'luxon';
+import { Unprocessable } from 'src/core/exception/unprocessable';
 
 @Injectable()
 export class HashService {
@@ -24,6 +26,12 @@ export class HashService {
     user: User,
     options?: { accessExpiredSec?: number; refreshExpiredSec?: number },
   ): Promise<Tokens> {
+    const accessExpiredSec =
+      options?.accessExpiredSec ||
+      parseInt(this.configService.get('TOKEN_ACCESS_LIFE_TIME_SECONDS'));
+    const refreshExpiredSec =
+      options?.refreshExpiredSec ||
+      parseInt(this.configService.get('TOKEN_REFRESH_LIFE_TIME_SECONDS'));
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(
         {
@@ -34,7 +42,7 @@ export class HashService {
           session: user.session,
         },
         {
-          expiresIn: options?.accessExpiredSec || 60 * 30,
+          expiresIn: accessExpiredSec,
         },
       ),
       this.jwtService.signAsync(
@@ -46,11 +54,20 @@ export class HashService {
           session: user.session,
         },
         {
-          expiresIn: options?.refreshExpiredSec || 60 * 60 * 24 * 30,
+          expiresIn: refreshExpiredSec,
         },
       ),
     ]);
-    return { accessToken: accessToken, refreshToken: refreshToken };
+    return {
+      tokenAccess: accessToken,
+      tokenAccessExpires: DateTime.now()
+        .plus({ second: accessExpiredSec })
+        .toJSDate(),
+      tokenRefresh: refreshToken,
+      tokenRefreshExpires: DateTime.now()
+        .plus({ second: refreshExpiredSec })
+        .toJSDate(),
+    };
   }
 
   async decode(token: string, checkExpiry = true) {

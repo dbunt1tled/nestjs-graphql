@@ -15,6 +15,8 @@ import { HashModule } from 'src/core/hash/hash.module';
 import { ExceptionHandler } from 'src/handler';
 import { APP_FILTER } from '@nestjs/core';
 import { AuthModule } from 'src/modules/auth/auth.module';
+import { BaseException } from 'src/core/exception/base-exception';
+import { JSONParseSafe } from 'src/core/utils';
 
 @Module({
   imports: [
@@ -40,6 +42,8 @@ import { AuthModule } from 'src/modules/auth/auth.module';
         dateScalarMode: 'timestamp',
         numberScalarMode: 'integer',
       },
+      context: ({ req, res }) => ({ req, res }),
+      formatError: (err) => JSONParseSafe(err.message, true),
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',
@@ -62,10 +66,10 @@ import { AuthModule } from 'src/modules/auth/auth.module';
   providers: [
     AppService,
     DateScalar,
-    // {
-    //   provide: APP_FILTER,
-    //   useClass: ExceptionHandler,
-    // },
+    {
+      provide: APP_FILTER,
+      useClass: ExceptionHandler,
+    },
   ],
 })
 export class AppModule {}

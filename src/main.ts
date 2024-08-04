@@ -35,7 +35,6 @@ async function bootstrap() {
       //whitelist: true, // enable mutation Args empty
     }),
   );
-
   await app.listen(port);
 }
 runInCluster(bootstrap);

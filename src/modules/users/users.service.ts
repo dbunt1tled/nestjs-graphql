@@ -89,17 +89,4 @@ export class UsersService {
       await this.rolesService.list(new RolesFilter({ filter: { userId } }))
     );
   }
-
-  async validateCredentials(email: string, password: string): Promise<User> {
-    const user = await this.one(new UsersFilter({ filter: { email } }));
-    if (!user) {
-      throw new NotFound(100003, `Email or password is incorrect`);
-    }
-    const pass = await this.hashService.compare(password, user.hash);
-    if (!pass) {
-      throw new NotFound(100004, `Email or password is incorrect`);
-    }
-
-    return user;
-  }
 }
