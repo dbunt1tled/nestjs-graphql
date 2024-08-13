@@ -57,6 +57,7 @@ export class UsersRepository extends RepositoryBase<User> {
       name: user.name ?? u.name,
       hash: user.password ? await this.hashService.hash(user.password) : u.hash,
       status: user.status ?? u.status,
+      session: user.session ?? u.session,
       confirmedAt: user.confirmedAt ?? u.confirmedAt,
     });
   }

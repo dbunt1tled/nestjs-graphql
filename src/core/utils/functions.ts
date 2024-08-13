@@ -7,6 +7,7 @@ import { v4 as uuidv4 } from 'uuid';
 import path from 'path';
 import { Duration } from 'luxon';
 import { ToHumanDurationOptions } from 'luxon/src/duration';
+import * as crypto from 'node:crypto';
 
 export const ip = (request: FastifyRequest | IncomingMessage) => {
   const rec = request as any;
@@ -26,6 +27,10 @@ export const ip = (request: FastifyRequest | IncomingMessage) => {
 
 export const hash = (guid: string, algorithm: string = 'sha256'): string => {
   return createHash(algorithm).update(guid).digest('hex');
+};
+
+export const random = (size: number = 32): string => {
+  return crypto.randomBytes(size).toString('hex');
 };
 
 export const uuid7 = () => uuidv7();

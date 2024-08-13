@@ -17,6 +17,9 @@ export class UserCreateInput {
   status: UserStatus;
 
   @Field({ nullable: true })
+  session?: string;
+
+  @Field({ nullable: true })
   confirmedAt?: Date;
 
   @Field(() => [String], { nullable: true })

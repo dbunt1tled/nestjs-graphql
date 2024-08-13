@@ -7,6 +7,7 @@ import { ConfigService } from '@nestjs/config';
 import { Tokens } from 'src/core/hash/dto/tokens';
 import { DateTime } from 'luxon';
 import { Unprocessable } from 'src/core/exception/unprocessable';
+import { random } from 'src/core/utils';
 
 @Injectable()
 export class HashService {
@@ -20,6 +21,10 @@ export class HashService {
 
   async hash(plainText: string): Promise<string> {
     return await argon2.hash(plainText);
+  }
+
+  random(size: number = 32): string {
+    return random(size);
   }
 
   async tokens(

@@ -9,6 +9,8 @@ import { SignInResponse } from 'src/modules/auth/dto/sign-in.response';
 import { UserStatus } from 'src/modules/users/enum/user.status';
 import { SignInInput } from 'src/modules/auth/dto/sign-in.input';
 import { SignUpResponse } from 'src/modules/auth/dto/sign-up.response';
+import { TokenType } from 'src/core/hash/enums/token.type';
+import { Unauthorized } from 'src/core/exception/unauthorized';
 
 @Injectable()
 export class AuthService {
@@ -18,7 +20,11 @@ export class AuthService {
   ) {}
 
   async signIn(signIn: SignInInput): Promise<SignInResponse> {
-    const user = await this.validateCredentials(signIn.email, signIn.password);
+    let user = await this.validateCredentials(signIn.email, signIn.password);
+    user = await this.usersService.change({
+      id: user.id,
+      session: this.hashService.random(16),
+    });
     return await this.hashService.tokens(user);
   }
 
@@ -51,9 +57,27 @@ export class AuthService {
     checkExpiry = true,
   ): Promise<User> {
     const token = await this.hashService.decode(accessToken, checkExpiry);
+
+    if (token.type !== TokenType.ACCESS) {
+      throw new Unauthorized(
+        400003,
+        `Your request was made with invalid credentials.`,
+      );
+    }
+
     const user = await this.usersService.getById(token.sub);
     if (!user) {
-      throw new NotFound(100003, `Email or password is incorrect`);
+      throw new Unauthorized(
+        400004,
+        `Your request was made with invalid credentials.`,
+      );
+    }
+
+    if (user.session === null || user.session !== token.session) {
+      throw new Unauthorized(
+        400005,
+        `Your request was made with invalid credentials.`,
+      );
     }
 
     return user;
