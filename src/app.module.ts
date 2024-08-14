@@ -15,8 +15,8 @@ import { HashModule } from 'src/core/hash/hash.module';
 import { ExceptionHandler } from 'src/handler';
 import { APP_FILTER } from '@nestjs/core';
 import { AuthModule } from 'src/modules/auth/auth.module';
-import { BaseException } from 'src/core/exception/base-exception';
 import { JSONParseSafe } from 'src/core/utils';
+import { Algorithm } from 'jsonwebtoken';
 
 @Module({
   imports: [
@@ -29,7 +29,14 @@ import { JSONParseSafe } from 'src/core/utils';
       global: true,
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
-        secret: configService.get('JWT_KEY'),
+        privateKey: configService.get<string>('JWT_PRIVATE_KEY', ''),
+        publicKey: configService.get<string>('JWT_PUBLIC_KEY', ''),
+        signOptions: {
+          algorithm: configService.get<Algorithm>(
+            'JWT_TOKEN_ALGORITHM',
+            'RS256',
+          ),
+        },
       }),
       inject: [ConfigService],
     }),

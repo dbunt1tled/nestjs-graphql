@@ -10,6 +10,7 @@ import { RolesModule } from 'src/modules/roles/roles.module';
 import { TestCommand } from 'src/commands/test.command';
 import { HashModule } from './core/hash/hash.module';
 import { AuthModule } from 'src/modules/auth/auth.module';
+import { Algorithm } from 'jsonwebtoken';
 
 @Module({
   imports: [
@@ -22,7 +23,14 @@ import { AuthModule } from 'src/modules/auth/auth.module';
       global: true,
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
-        secret: configService.get('JWT_KEY'),
+        privateKey: configService.get<string>('JWT_PRIVATE_KEY', ''),
+        publicKey: configService.get<string>('JWT_PUBLIC_KEY', ''),
+        signOptions: {
+          algorithm: configService.get<Algorithm>(
+            'JWT_TOKEN_ALGORITHM',
+            'RS256',
+          ),
+        },
       }),
       inject: [ConfigService],
     }),
