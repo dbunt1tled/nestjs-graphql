@@ -5,7 +5,6 @@ import {
   CreateDateColumn,
   Entity,
   Index,
-  JoinTable,
   OneToMany,
   PrimaryColumn,
   UpdateDateColumn,
@@ -56,7 +55,7 @@ export class User {
   updatedAt: Date;
 
   @JoinColumn({ name: 'userId', referencedColumnName: 'id' })
-  @OneToMany(() => Role, (role: Role) => role.userId)
+  @OneToMany(() => Role, (role: Role) => role.user)
   @Field(() => [Role], { nullable: true })
   roles?: Role[];
 }

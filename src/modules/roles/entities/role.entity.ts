@@ -1,7 +1,14 @@
 import { ObjectType, Field } from '@nestjs/graphql';
-import { CreateDateColumn, Entity, PrimaryColumn, Unique } from 'typeorm';
+import {
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryColumn,
+  Unique,
+} from 'typeorm';
 import { UuidScalar } from 'src/core/utils/scalars/uuid.scalar';
 import { Roles } from 'src/modules/roles/enum/roles';
+import { User } from 'src/modules/users/entities/user.entity';
 
 @Entity('roles')
 @ObjectType()
@@ -18,4 +25,7 @@ export class Role {
   @CreateDateColumn()
   @Field()
   createdAt: Date;
+
+  @ManyToOne(() => User, (user) => user.roles)
+  user: User;
 }

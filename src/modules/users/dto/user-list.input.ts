@@ -44,6 +44,7 @@ export class UserListInput {
         limit: this.limit,
         page: this.page,
       },
+      relations: ['roles'],
     });
   }
 }

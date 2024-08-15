@@ -15,6 +15,8 @@ import { UserListInput } from 'src/modules/users/dto/user-list.input';
 import { UserListObject } from 'src/modules/users/dto/user-list.object';
 import { UseGuards } from '@nestjs/common';
 import { AuthBearerGuard } from 'src/modules/auth/guards/auth-bearer.guard';
+import { UsersFilter } from 'src/modules/users/repository/users.filter';
+import { NotFound } from 'src/core/exception/not-found';
 
 @UseGuards(AuthBearerGuard)
 @Resolver(() => User)
@@ -32,12 +34,22 @@ export class UsersResolver {
   }
 
   @Mutation(() => User)
-  userCreate(@Args('user') user: UserCreateInput): Promise<User> {
+  async userCreate(@Args('user') user: UserCreateInput): Promise<User> {
+    const u = await this.usersService.one(
+      new UsersFilter({ filter: { email: user.email } }),
+    );
+    if (u) {
+      throw new NotFound(100006, `Email already exists`);
+    }
+
     return this.usersService.new(user);
   }
 
   @ResolveField(() => [Role])
   roles(@Parent() user: User): Promise<Role[]> {
+    if (user.roles) {
+      return Promise.resolve(user.roles);
+    }
     return this.usersService.roles(user.id);
   }
 }

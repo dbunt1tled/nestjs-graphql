@@ -5,7 +5,7 @@ import { ILike, In, IsNull, Not, Or } from 'typeorm';
 export class Filter {
   constructor(public readonly options?: FilterOptions) {}
 
-  build(limit?: number, where?: object): FilterCondition {
+  build(limit?: number, where?: object, relations?: string[]): FilterCondition {
     let take = limit;
     let skip = undefined;
     if (this.options.pagination?.page) {
@@ -17,6 +17,7 @@ export class Filter {
       order: this.options.sort,
       skip: skip,
       take: take,
+      relations: relations,
     };
   }
 

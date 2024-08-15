@@ -5,4 +5,5 @@ export interface FilterOptions {
   filter?: object;
   sort?: SortOrder;
   pagination?: Pagination;
+  relations?: string[];
 }

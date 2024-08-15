@@ -20,19 +20,24 @@ export class UsersFilter extends Filter {
       };
       sort?: SortOrder;
       pagination?: Pagination;
+      relations?: string[];
     },
   ) {
     super(options);
   }
   build(limit?: number): FilterCondition {
-    return super.build(limit, {
-      ...this.andWhere('id', this.options.filter.id),
-      ...this.andWhere('email', this.options.filter.email),
-      ...this.andWhere('status', this.options.filter.status),
-      ...this.andWhereLike('email', this.options.filter.emailFilter),
-      ...this.andWhere('name', this.options.filter.name),
-      ...this.andWhereLike('name', this.options.filter.nameFilter),
-      ...this.andWhereNot('id', this.options.filter.userIdExclude),
-    });
+    return super.build(
+      limit,
+      {
+        ...this.andWhere('id', this.options.filter.id),
+        ...this.andWhere('email', this.options.filter.email),
+        ...this.andWhere('status', this.options.filter.status),
+        ...this.andWhereLike('email', this.options.filter.emailFilter),
+        ...this.andWhere('name', this.options.filter.name),
+        ...this.andWhereLike('name', this.options.filter.nameFilter),
+        ...this.andWhereNot('id', this.options.filter.userIdExclude),
+      },
+      this.options.relations,
+    );
   }
 }

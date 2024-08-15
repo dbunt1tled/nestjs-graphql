@@ -3,4 +3,5 @@ export interface FilterCondition {
   skip?: number;
   take?: number;
   order?: object;
+  relations?: string[];
 }

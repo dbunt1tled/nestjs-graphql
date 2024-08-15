@@ -29,6 +29,13 @@ export class AuthService {
   }
 
   async signUp(signUp: SignUpInput): Promise<SignUpResponse> {
+    const user = await this.usersService.one(
+      new UsersFilter({ filter: { email: signUp.email } }),
+    );
+    if (user) {
+      throw new NotFound(100005, `Email already exists`);
+    }
+
     return <SignUpResponse>await this.usersService.new({
       name: signUp.name,
       email: signUp.email,
@@ -76,6 +83,13 @@ export class AuthService {
     if (user.session === null || user.session !== token.session) {
       throw new Unauthorized(
         400005,
+        `Your request was made with invalid credentials.`,
+      );
+    }
+
+    if (user.status !== UserStatus.ACTIVE) {
+      throw new Unauthorized(
+        400006,
         `Your request was made with invalid credentials.`,
       );
     }

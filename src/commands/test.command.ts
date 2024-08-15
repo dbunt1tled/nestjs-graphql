@@ -28,7 +28,7 @@ export class TestCommand extends CommandRunner {
     // });
     // console.log(tokens);
     const token =
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwMTkwZmUxYS04Nzk3LTdjY2QtYWNhNy0xZjQzZDkzYjcwMjIiLCJlbWFpbCI6InNpZG5pQGkudWEiLCJ0eXBlIjoiYWNjZXNzIiwic2Vzc2lvbiI6bnVsbCwiaWF0IjoxNzIyNTA4MDI1LCJleHAiOjE3MjI1MDgwMzV9.sJMxFyLv3HkvSmI0sOZXfz4K4N1ZvjbYf9D398k7_-w';
+      'eyJhbGciOiJFUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwMTkxMGY5My05MmVmLTc0NGEtODVhOS05ZTVlOGIzMTczZWYiLCJlbWFpbCI6InNpZG5pKzFAaS51YSIsInR5cGUiOiJhY2Nlc3MiLCJzZXNzaW9uIjoiZmIwY2ZhMTE5ZDcxY2Y4ODYzYzQ4NDBkZWRiYWQxN2EiLCJpYXQiOjE3MjM2NTA3NTksImV4cCI6MTcyMzY1Nzk1OX0.AEmOpLwQTSiqViK3MRc_FJHgTL2Q9GaILFGDlH0d1jjGnRJrQRVT5nl8ccTmH_Z9vbRKETnFFSXTFJJuO0LLj11HAa_xANIM4Wjsp2L8Qf0KpC0nfnoZWCxfBW7KKRExpViDBm_I1_XofKS4oYhwvni0EjOs8mU-A2kh9r5pOTJGNAG6';
     console.log(await this.hashService.decode(token, false));
   }
 }
