@@ -17,6 +17,7 @@ import { UseGuards } from '@nestjs/common';
 import { AuthBearerGuard } from 'src/modules/auth/guards/auth-bearer.guard';
 import { UsersFilter } from 'src/modules/users/repository/users.filter';
 import { NotFound } from 'src/core/exception/not-found';
+import { AuthUser } from 'src/core/decorator/auth.user.decorator';
 
 @UseGuards(AuthBearerGuard)
 @Resolver(() => User)
@@ -24,7 +25,8 @@ export class UsersResolver {
   constructor(private readonly usersService: UsersService) {}
 
   @Query(() => UserListObject)
-  async userList(@Args('req') req: UserListInput) {
+  async userList(@Args('req') req: UserListInput, @AuthUser() user: User) {
+    console.log(user);
     return (await this.usersService.list(req.toFilter())) as Paginator<User>;
   }
 
