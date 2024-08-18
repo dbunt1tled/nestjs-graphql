@@ -36,7 +36,7 @@ export class UsersRepository extends RepositoryBase<User> {
   async new(user: UserCreateInput): Promise<User> {
     return await this.repository.save(
       this.repository.create({
-        id: uuid7(),
+        id: user.id || uuid7(),
         name: user.name,
         email: user.email,
         hash: await this.hashService.hash(user.password),

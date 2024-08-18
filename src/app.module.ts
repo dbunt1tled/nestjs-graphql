@@ -17,6 +17,9 @@ import { APP_FILTER } from '@nestjs/core';
 import { AuthModule } from 'src/modules/auth/auth.module';
 import { JSONParseSafe } from 'src/core/utils';
 import { Algorithm } from 'jsonwebtoken';
+import { FilesModule } from './modules/files/files.module';
+import { UploadGraphQLScalar } from 'src/core/utils/scalars/upload.scalar';
+import { ConfigApiModule } from 'src/core/config-api/config-api.module';
 
 @Module({
   imports: [
@@ -68,11 +71,14 @@ import { Algorithm } from 'jsonwebtoken';
     RolesModule,
     HashModule,
     AuthModule,
+    FilesModule,
+    ConfigApiModule,
   ],
   controllers: [AppController],
   providers: [
     AppService,
     DateScalar,
+    UploadGraphQLScalar,
     {
       provide: APP_FILTER,
       useClass: ExceptionHandler,

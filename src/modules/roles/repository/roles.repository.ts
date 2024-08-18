@@ -65,6 +65,6 @@ export class RolesRepository extends RepositoryBase<Role> {
     if (role) {
       builder.andWhere('role = :role', { role });
     }
-    return await builder.execute();
+    return await builder.delete().execute();
   }
 }

@@ -11,6 +11,8 @@ import { TestCommand } from 'src/commands/test.command';
 import { HashModule } from './core/hash/hash.module';
 import { AuthModule } from 'src/modules/auth/auth.module';
 import { Algorithm } from 'jsonwebtoken';
+import { FilesModule } from './modules/files/files.module';
+import { ConfigApiModule } from './core/config-api/config-api.module';
 
 @Module({
   imports: [
@@ -50,6 +52,8 @@ import { Algorithm } from 'jsonwebtoken';
     RolesModule,
     HashModule,
     AuthModule,
+    FilesModule,
+    ConfigApiModule,
   ],
   controllers: [AppController],
   providers: [AppService, TestCommand],

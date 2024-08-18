@@ -2,12 +2,13 @@ import { cpus } from 'node:os';
 import { FastifyRequest } from 'fastify';
 import { IncomingMessage } from 'http';
 import { createHash } from 'crypto';
-import { v7 as uuidv7 } from 'uuid';
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4, v7 as uuidv7 } from 'uuid';
 import path from 'path';
 import { Duration } from 'luxon';
 import { ToHumanDurationOptions } from 'luxon/src/duration';
 import * as crypto from 'node:crypto';
+import fs from 'node:fs';
+import { NotFound } from 'src/core/exception/not-found';
 
 export const ip = (request: FastifyRequest | IncomingMessage) => {
   const rec = request as any;
@@ -157,4 +158,33 @@ export const durationToHuman = (
       opts,
     ),
   );
+};
+
+export const uploadFileStream = async (
+  readStream,
+  uploadDir: string,
+  filename: string,
+) => {
+  const filePath = path.join(uploadDir, filename);
+  console.log(`file path: ${filePath}`);
+  try {
+    await fs.promises.stat(uploadDir);
+  } catch (error) {
+    if (error.code !== 'ENOENT') {
+      throw error;
+    }
+    await fs.promises.mkdir(uploadDir, { recursive: true });
+  }
+
+  const inStream = readStream();
+  const outStream = fs.createWriteStream(filePath);
+  inStream.pipe(outStream);
+  // await finished(outStream)
+  //   .then(() => {
+  //     console.log('file uploaded');
+  //   })
+  //   .catch((err) => {
+  //     console.log(err.message);
+  //     throw new NotFound(100008, err.message);
+  //   });
 };

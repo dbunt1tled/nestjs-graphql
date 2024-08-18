@@ -1,9 +1,13 @@
 import { UserStatus } from 'src/modules/users/enum/user.status';
 import { Field, InputType, Int } from '@nestjs/graphql';
 import { Roles } from 'src/modules/roles/enum/roles';
+import { UuidScalar } from 'src/core/utils/scalars/uuid.scalar';
 
 @InputType()
 export class UserCreateInput {
+  @Field(() => UuidScalar, { nullable: true })
+  id?: string;
+
   @Field({ nullable: true })
   name?: string;
 

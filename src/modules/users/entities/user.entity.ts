@@ -12,6 +12,7 @@ import {
 import { UserStatus } from 'src/modules/users/enum/user.status';
 import { Role } from 'src/modules/roles/entities/role.entity';
 import { JoinColumn } from 'typeorm/decorator/relations/JoinColumn';
+import { File } from 'src/modules/files/entities/file.entity';
 
 @Entity('users')
 @ObjectType()
@@ -53,6 +54,11 @@ export class User {
   @UpdateDateColumn()
   @Field()
   updatedAt: Date;
+
+  @JoinColumn({ name: 'userId', referencedColumnName: 'id' })
+  @OneToMany(() => File, (file: File) => file.user)
+  @Field(() => [File], { nullable: true })
+  files?: File[];
 
   @JoinColumn({ name: 'userId', referencedColumnName: 'id' })
   @OneToMany(() => Role, (role: Role) => role.user)

@@ -2,6 +2,7 @@ import { Log } from 'src/core/logger/log';
 import { FastifyAdapter } from '@nestjs/platform-fastify';
 import { durationToHuman, ip, uuid7 } from 'src/core/utils';
 import qs from 'qs';
+import { processRequest } from 'graphql-upload';
 
 export const fastifyInstance = () => {
   const logger = new Log('main');
@@ -14,6 +15,21 @@ export const fastifyInstance = () => {
     querystringParser: (str) => qs.parse(str),
     genReqId: () => uuid7(),
   }).getInstance();
+
+  server.addContentTypeParser(
+    ['multipart/form-data', 'multipart'],
+    function (req: any, reply, done) {
+      req.isMultipart = true;
+      done(null);
+    },
+  );
+
+  server.addHook('preValidation', async function (req: any, reply) {
+    if (!req.isMultipart) {
+      return;
+    }
+    req.body = await processRequest(req.raw, reply.raw);
+  });
 
   if (process.env.APP_DEBUG == 'true') {
     server.addHook('preHandler', (req, reply, done) => {
@@ -71,4 +87,4 @@ export const fastifyInstance = () => {
   });
 
   return server;
-}
+};

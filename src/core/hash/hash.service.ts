@@ -6,8 +6,7 @@ import { TokenType } from 'src/core/hash/enums/token.type';
 import { ConfigService } from '@nestjs/config';
 import { Tokens } from 'src/core/hash/dto/tokens';
 import { DateTime } from 'luxon';
-import { Unprocessable } from 'src/core/exception/unprocessable';
-import { random } from 'src/core/utils';
+import { random, uuid7 } from 'src/core/utils';
 
 @Injectable()
 export class HashService {
@@ -25,6 +24,10 @@ export class HashService {
 
   random(size: number = 32): string {
     return random(size);
+  }
+
+  uuid7(): string {
+    return uuid7();
   }
 
   async tokens(
