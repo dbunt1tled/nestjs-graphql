@@ -15,8 +15,8 @@ export class FilesResolver {
     private readonly hashService: HashService,
     private readonly filesService: FilesService,
   ) {}
-  @Mutation(() => File)
-  async fileCreate(@Args('files') files: FileCreateInput): Promise<File> {
+  @Mutation(() => [File])
+  async fileCreate(@Args('files') files: FileCreateInput): Promise<File[]> {
     const fileInfo = new PathInfo({ userId: files.userId });
     const uploadDir = this.fileConfig.storagePath(fileInfo);
     try {
@@ -28,7 +28,7 @@ export class FilesResolver {
       await fs.promises.mkdir(uploadDir, { recursive: true });
     }
 
-    const result = await Promise.all(
+    return await Promise.all(
       files.files.map(async (file) => {
         const { filename, mimetype, encoding, createReadStream } = await file;
         const fileNameSave = path.join(
@@ -36,39 +36,24 @@ export class FilesResolver {
           `${this.hashService.random(4)}_${filename}`,
         );
         const stream = createReadStream();
-        await new Promise((resolve, reject) => {
+        const name = await new Promise((resolve) => {
           stream
-            .on('end', () => {
-              console.log('ReadStream Ended');
-            })
-            .on('close', () => {
-              console.log('ReadStream Closed');
-            })
-            .on('error', (err) => {
-              console.error('ReadStream Error', err);
-            })
             .pipe(fs.createWriteStream(fileNameSave))
-            .on('end', () => {
-              console.log('WriteStream Ended');
-              resolve('end');
-            })
-            .on('close', () => {
-              console.log('WriteStream Closed');
-              resolve('close');
-            })
+            .on('finish', () => resolve(fileNameSave))
             .on('error', (err) => {
-              console.log('WriteStream Error', err);
-              reject('error');
+              if (err instanceof Error) {
+                throw err;
+              }
+              throw new Error(err);
             });
         });
         return this.filesService.new({
           id: this.hashService.uuid7(),
-          path: fileNameSave,
+          path: name as string,
           type: fileInfo.type,
           userId: files.userId,
         });
       }),
     );
-    return result[0];
   }
 }
