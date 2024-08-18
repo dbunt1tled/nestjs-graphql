@@ -3,16 +3,16 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from 'src/modules/users/users.module';
 import * as process from 'node:process';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RolesModule } from 'src/modules/roles/roles.module';
 import { TestCommand } from 'src/commands/test.command';
 import { HashModule } from './core/hash/hash.module';
 import { AuthModule } from 'src/modules/auth/auth.module';
-import { Algorithm } from 'jsonwebtoken';
 import { FilesModule } from './modules/files/files.module';
 import { ConfigApiModule } from './core/config-api/config-api.module';
+import { HashConfig } from 'src/core/config-api/hash.config';
 
 @Module({
   imports: [
@@ -23,18 +23,15 @@ import { ConfigApiModule } from './core/config-api/config-api.module';
     }),
     JwtModule.registerAsync({
       global: true,
-      imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
-        privateKey: configService.get<string>('JWT_PRIVATE_KEY', ''),
-        publicKey: configService.get<string>('JWT_PUBLIC_KEY', ''),
+      imports: [ConfigApiModule],
+      useFactory: (hashConfig: HashConfig) => ({
+        privateKey: hashConfig.privateKey,
+        publicKey: hashConfig.publicKey,
         signOptions: {
-          algorithm: configService.get<Algorithm>(
-            'JWT_TOKEN_ALGORITHM',
-            'RS256',
-          ),
+          algorithm: hashConfig.jwtAlgorithm,
         },
       }),
-      inject: [ConfigService],
+      inject: [HashConfig],
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',

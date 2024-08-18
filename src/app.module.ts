@@ -6,7 +6,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import path from 'path';
 import * as process from 'node:process';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RolesModule } from 'src/modules/roles/roles.module';
@@ -16,10 +16,10 @@ import { ExceptionHandler } from 'src/handler';
 import { APP_FILTER } from '@nestjs/core';
 import { AuthModule } from 'src/modules/auth/auth.module';
 import { JSONParseSafe } from 'src/core/utils';
-import { Algorithm } from 'jsonwebtoken';
 import { FilesModule } from './modules/files/files.module';
 import { UploadGraphQLScalar } from 'src/core/utils/scalars/upload.scalar';
 import { ConfigApiModule } from 'src/core/config-api/config-api.module';
+import { HashConfig } from 'src/core/config-api/hash.config';
 
 @Module({
   imports: [
@@ -30,18 +30,15 @@ import { ConfigApiModule } from 'src/core/config-api/config-api.module';
     }),
     JwtModule.registerAsync({
       global: true,
-      imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
-        privateKey: configService.get<string>('JWT_PRIVATE_KEY', ''),
-        publicKey: configService.get<string>('JWT_PUBLIC_KEY', ''),
+      imports: [ConfigApiModule],
+      useFactory: (hashConfig: HashConfig) => ({
+        privateKey: hashConfig.privateKey,
+        publicKey: hashConfig.publicKey,
         signOptions: {
-          algorithm: configService.get<Algorithm>(
-            'JWT_TOKEN_ALGORITHM',
-            'RS256',
-          ),
+          algorithm: hashConfig.jwtAlgorithm,
         },
       }),
-      inject: [ConfigService],
+      inject: [HashConfig],
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       autoSchemaFile: path.join(process.cwd(), 'src/schema.gql'),
