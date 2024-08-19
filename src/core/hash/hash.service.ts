@@ -55,7 +55,7 @@ export class HashService {
         {
           sub: user.id,
           email: user.email,
-          type: TokenType.ACCESS,
+          type: TokenType.REFRESH,
           role: user.roles,
           session: user.session,
         },

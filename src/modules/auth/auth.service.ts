@@ -28,6 +28,14 @@ export class AuthService {
     return await this.hashService.tokens(user);
   }
 
+  async refreshToken(user: User): Promise<SignInResponse> {
+    user = await this.usersService.change({
+      id: user.id,
+      session: this.hashService.random(16),
+    });
+    return await this.hashService.tokens(user);
+  }
+
   async signUp(signUp: SignUpInput): Promise<SignUpResponse> {
     const user = await this.usersService.one(
       new UsersFilter({ filter: { email: signUp.email } }),
@@ -59,13 +67,14 @@ export class AuthService {
     return user;
   }
 
-  async getUserByAccessToken(
-    accessToken: string,
-    checkExpiry = true,
+  async getUserByToken(
+    jwtToken: string,
+    tokenType: TokenType = TokenType.ACCESS,
+    checkExpiry: boolean = true,
   ): Promise<User> {
-    const token = await this.hashService.decode(accessToken, checkExpiry);
+    const token = await this.hashService.decode(jwtToken, checkExpiry);
 
-    if (token.type !== TokenType.ACCESS) {
+    if (token.type !== tokenType) {
       throw new Unauthorized(
         400003,
         `Your request was made with invalid credentials.`,
