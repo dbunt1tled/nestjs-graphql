@@ -30,6 +30,26 @@ export class HashService {
     return uuid7();
   }
 
+  async confirmEmailToken(
+    user: User,
+    options?: { expiredSec?: number },
+  ): Promise<string> {
+    const expiredSec =
+      options?.expiredSec || this.hashConfig.tokenConfirmEmailLifeTime;
+
+    return await this.jwtService.signAsync(
+      {
+        sub: user.id,
+        email: user.email,
+        type: TokenType.CONFIRM_EMAIL,
+        session: user.session,
+      },
+      {
+        expiresIn: expiredSec,
+      },
+    );
+  }
+
   async tokens(
     user: User,
     options?: { accessExpiredSec?: number; refreshExpiredSec?: number },

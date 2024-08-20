@@ -8,14 +8,15 @@ import {
 import { fastifyInstance } from './http.server';
 import 'dotenv/config';
 import { ValidationPipe } from '@nestjs/common';
+import { initializeTransactionalContext } from 'typeorm-transactional';
 
 async function bootstrap() {
+  initializeTransactionalContext();
   const port = process.env.APP_PORT ?? 3000;
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
     new FastifyAdapter(fastifyInstance()),
   );
-
   app.enableShutdownHooks();
   app.enableCors({
     methods: process.env.CORS_ALLOWED_METHODS.toString().split(','),

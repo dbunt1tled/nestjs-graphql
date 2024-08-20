@@ -1,7 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { PathInfo } from 'src/core/config-api/dto/path-info.dto';
-import path from 'path';
 import { Algorithm } from 'jsonwebtoken';
 
 @Injectable()
@@ -29,6 +27,12 @@ export class HashConfig {
   get tokenRefreshLifeTime(): number {
     return parseInt(
       this.configService.getOrThrow('TOKEN_REFRESH_LIFE_TIME_SECONDS'),
+    );
+  }
+
+  get tokenConfirmEmailLifeTime(): number {
+    return parseInt(
+      this.configService.getOrThrow('TOKEN_CONFIRM_EMAIL_LIFE_TIME_SECONDS'),
     );
   }
 }

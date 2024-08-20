@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { UsersService } from 'src/modules/users/users.service';
 import { User } from 'src/modules/users/entities/user.entity';
 import { UsersFilter } from 'src/modules/users/repository/users.filter';
@@ -11,11 +11,15 @@ import { SignInInput } from 'src/modules/auth/dto/sign-in.input';
 import { SignUpResponse } from 'src/modules/auth/dto/sign-up.response';
 import { TokenType } from 'src/core/hash/enums/token.type';
 import { Unauthorized } from 'src/core/exception/unauthorized';
+import { MailService } from 'src/modules/mail/mail.service';
+import { EmailConfirmInput } from 'src/modules/auth/dto/email-confirm.input';
+import { Forbidden } from 'src/core/exception/forbidden';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly hashService: HashService,
+    private readonly mailService: MailService,
     private readonly usersService: UsersService,
   ) {}
 
@@ -37,19 +41,23 @@ export class AuthService {
   }
 
   async signUp(signUp: SignUpInput): Promise<SignUpResponse> {
-    const user = await this.usersService.one(
+    let user = await this.usersService.one(
       new UsersFilter({ filter: { email: signUp.email } }),
     );
     if (user) {
       throw new NotFound(100005, `Email already exists`);
     }
 
-    return <SignUpResponse>await this.usersService.new({
+    user = await this.usersService.new({
       name: signUp.name,
       email: signUp.email,
       password: signUp.password,
       status: UserStatus.PENDING,
     });
+
+    await this.mailService.confirmUser(user);
+
+    return <SignUpResponse>user;
   }
 
   async validateCredentials(email: string, password: string): Promise<User> {
@@ -104,5 +112,34 @@ export class AuthService {
     }
 
     return user;
+  }
+
+  async confirmEmail(token: EmailConfirmInput): Promise<User> {
+    const data = await this.hashService.decode(token.token, true);
+
+    if (data.type !== TokenType.CONFIRM_EMAIL) {
+      throw new Forbidden(
+        500001,
+        `Your request was made with invalid credentials.`,
+      );
+    }
+
+    const user = await this.usersService.findById(data.sub);
+    if (!user || user.status === UserStatus.DELETED) {
+      throw new Forbidden(
+        500002,
+        `Your request was made with invalid credentials.`,
+      );
+    }
+
+    if (user.confirmedAt !== null && user.status !== UserStatus.PENDING) {
+      return user;
+    }
+
+    return await this.usersService.change({
+      id: user.id,
+      status: UserStatus.ACTIVE,
+      confirmedAt: new Date(),
+    });
   }
 }

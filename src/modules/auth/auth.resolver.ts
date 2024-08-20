@@ -10,6 +10,8 @@ import { TokenCheck } from 'src/modules/auth/decorators/token-check.decorator';
 import { TokenType } from 'src/core/hash/enums/token.type';
 import { AuthUser } from 'src/core/decorator/auth.user.decorator';
 import { User } from 'src/modules/users/entities/user.entity';
+import { Transactional } from 'typeorm-transactional';
+import { EmailConfirmInput } from 'src/modules/auth/dto/email-confirm.input';
 
 @Resolver()
 export class AuthResolver {
@@ -21,6 +23,7 @@ export class AuthResolver {
   }
 
   @Mutation(() => SignUpResponse)
+  @Transactional()
   async signUp(@Args('signUp') signUp: SignUpInput): Promise<SignUpResponse> {
     return this.authService.signUp(signUp);
   }
@@ -30,5 +33,11 @@ export class AuthResolver {
   @Mutation(() => SignInResponse)
   async refreshToken(@AuthUser() user: User): Promise<SignInResponse> {
     return this.authService.refreshToken(user);
+  }
+
+  @Mutation(() => User)
+  @Transactional()
+  async confirmEmail(@Args('token') token: EmailConfirmInput): Promise<User> {
+    return this.authService.confirmEmail(token);
   }
 }

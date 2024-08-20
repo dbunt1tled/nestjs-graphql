@@ -13,6 +13,9 @@ import { AuthModule } from 'src/modules/auth/auth.module';
 import { FilesModule } from './modules/files/files.module';
 import { ConfigApiModule } from './core/config-api/config-api.module';
 import { HashConfig } from 'src/core/config-api/hash.config';
+import { MailModule } from './modules/mail/mail.module';
+import { addTransactionalDataSource } from 'typeorm-transactional';
+import { DataSource } from 'typeorm';
 
 @Module({
   imports: [
@@ -33,17 +36,28 @@ import { HashConfig } from 'src/core/config-api/hash.config';
       }),
       inject: [HashConfig],
     }),
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: process.env.POSTGRES_HOST,
-      port: parseInt(process.env.POSTGRES_PORT),
-      username: process.env.POSTGRES_USER,
-      password: process.env.POSTGRES_PASSWORD,
-      database: process.env.POSTGRES_DATABASE,
-      migrationsTableName: 'migrations',
-      autoLoadEntities: true,
-      logging: process.env.NODE_ENV !== 'production',
-      entities: ['dist/**/*.entity{.ts,.js}'],
+    TypeOrmModule.forRootAsync({
+      useFactory() {
+        return {
+          type: 'postgres',
+          host: process.env.POSTGRES_HOST,
+          port: parseInt(process.env.POSTGRES_PORT),
+          username: process.env.POSTGRES_USER,
+          password: process.env.POSTGRES_PASSWORD,
+          database: process.env.POSTGRES_DATABASE,
+          migrationsTableName: 'migrations',
+          autoLoadEntities: true,
+          logging: process.env.NODE_ENV !== 'production',
+          entities: ['dist/**/*.entity{.ts,.js}'],
+        };
+      },
+      async dataSourceFactory(options) {
+        if (!options) {
+          throw new Error('Invalid options passed');
+        }
+
+        return addTransactionalDataSource(new DataSource(options));
+      },
     }),
     UsersModule,
     RolesModule,
@@ -51,6 +65,7 @@ import { HashConfig } from 'src/core/config-api/hash.config';
     AuthModule,
     FilesModule,
     ConfigApiModule,
+    MailModule,
   ],
   controllers: [AppController],
   providers: [AppService, TestCommand],

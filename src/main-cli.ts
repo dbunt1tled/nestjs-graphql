@@ -1,7 +1,9 @@
 import { CommandFactory } from 'nest-commander';
 import { AppCliModule } from 'src/app-cli.module';
+import { initializeTransactionalContext } from 'typeorm-transactional';
 
 async function bootstrap() {
+  initializeTransactionalContext();
   await CommandFactory.run(AppCliModule, ['warn', 'error']);
 }
 
