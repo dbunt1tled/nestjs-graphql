@@ -12,6 +12,6 @@ export class FileConfig {
   }
 
   public storagePath(info: PathInfo): string {
-    return path.join(this.filePath, info.path);
+    return info.path;
   }
 }

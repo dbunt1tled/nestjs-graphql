@@ -14,6 +14,7 @@ import { FileType } from 'src/modules/files/enum/file-type';
 
 @Entity('files')
 @Index('idx_files_type', ['type'])
+@Index('idx_files_userId', ['userId'])
 @ObjectType()
 export class File {
   @PrimaryColumn({ type: 'uuid' })

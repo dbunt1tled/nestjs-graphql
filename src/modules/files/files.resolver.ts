@@ -19,26 +19,32 @@ export class FilesResolver {
   async fileCreate(@Args('files') files: FileCreateInput): Promise<File[]> {
     const fileInfo = new PathInfo({ userId: files.userId });
     const uploadDir = this.fileConfig.storagePath(fileInfo);
+    const uploadDirFull = path.join(
+      this.fileConfig.filePath,
+      this.fileConfig.storagePath(fileInfo),
+    );
     try {
-      await fs.promises.stat(uploadDir);
+      await fs.promises.stat(uploadDirFull);
     } catch (error) {
       if (error.code !== 'ENOENT') {
         throw error;
       }
-      await fs.promises.mkdir(uploadDir, { recursive: true });
+      await fs.promises.mkdir(uploadDirFull, { recursive: true });
     }
 
     return await Promise.all(
       files.files.map(async (file) => {
         const { filename, mimetype, encoding, createReadStream } = await file;
-        const fileNameSave = path.join(
-          uploadDir,
-          `${this.hashService.random(4)}_${filename}`,
+        const prefix = this.hashService.random(6);
+        const fileNameSave = path.join(uploadDir, `${prefix}_${filename}`);
+        const fileNameSaveFull = path.join(
+          uploadDirFull,
+          `${prefix}_${filename}`,
         );
         const stream = createReadStream();
         const name = await new Promise((resolve) => {
           stream
-            .pipe(fs.createWriteStream(fileNameSave))
+            .pipe(fs.createWriteStream(fileNameSaveFull))
             .on('finish', () => resolve(fileNameSave))
             .on('error', (err) => {
               if (err instanceof Error) {

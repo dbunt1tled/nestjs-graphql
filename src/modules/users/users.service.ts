@@ -11,7 +11,6 @@ import { RolesFilter } from 'src/modules/roles/repository/roles.filter';
 import { isArray } from 'class-validator';
 import { Roles } from 'src/modules/roles/enum/roles';
 import { HashService } from 'src/core/hash/hash.service';
-import { NotFound } from 'src/core/exception/not-found';
 
 @Injectable()
 export class UsersService {
