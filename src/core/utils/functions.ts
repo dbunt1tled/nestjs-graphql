@@ -159,32 +159,3 @@ export const durationToHuman = (
     ),
   );
 };
-
-export const uploadFileStream = async (
-  readStream,
-  uploadDir: string,
-  filename: string,
-) => {
-  const filePath = path.join(uploadDir, filename);
-  console.log(`file path: ${filePath}`);
-  try {
-    await fs.promises.stat(uploadDir);
-  } catch (error) {
-    if (error.code !== 'ENOENT') {
-      throw error;
-    }
-    await fs.promises.mkdir(uploadDir, { recursive: true });
-  }
-
-  const inStream = readStream();
-  const outStream = fs.createWriteStream(filePath);
-  inStream.pipe(outStream);
-  // await finished(outStream)
-  //   .then(() => {
-  //     console.log('file uploaded');
-  //   })
-  //   .catch((err) => {
-  //     console.log(err.message);
-  //     throw new NotFound(100008, err.message);
-  //   });
-};
